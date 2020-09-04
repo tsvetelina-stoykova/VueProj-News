@@ -2,19 +2,29 @@
   <div class="news">
     <b-container class="container-news">
       <b-nav-form class="searchbar">
-          <b-form-input size="md" class="mr-sm-2 searchbar-input" placeholder="Search"></b-form-input>
-          <b-button size="md" class="my-2 my-sm-0" type="submit">Search</b-button>
+          <b-form-input v-model="keyword" id="name" size="md" class="mr-sm-2 searchbar-input" placeholder="Search"></b-form-input>
+          <b-button @click.prevent="search()" size="md" class="my-2 my-sm-0" type="submit">Search</b-button>
         </b-nav-form>
     </b-container>
  
   <div class="result-list">
-    <article v-for="(article, index) in news" :key='index'>
+    <article v-for="(article, index) in news" :key='index' @click="navTo(article.url)">
       <header>
         <img v-if="article.urlToImage" :src="article.urlToImage" alt="">
       </header>
       <section v-html="article.title" class="article-title"></section>
     </article>
   </div>
+
+  <div>
+     <article v-for="(article, index) in searchedNews" :key='index' @click="navTo(article.url)">
+      <header>
+        <img v-if="article.urlToImage" :src="article.urlToImage" alt="">
+      </header>
+      <section v-html="article.title" class="article-title"></section>
+    </article>
+  </div>
+
   </div>
 </template>
 
@@ -27,12 +37,22 @@ export default {
       currentPage: 1,
       totalResults: 0,
       maxPerPage: 10,
-      searchword: '',
+      keyword: '',
       articles: [],
       filters:[],
       country: 'bg'
     }
   },
+
+  methods: {
+    navTo(url){
+      window.open(url)
+    },
+    search(){
+      this.$store.dispatch('searchNews',this.keyword);  
+    }
+  },
+ 
 
   created(){
     // this.fetchNews();
@@ -42,14 +62,18 @@ export default {
     // }
     this.filters.push( {'country' : this.country} ) 
     this.filters.push({'pageSize': this.maxPerPage})
-    console.log(this.filters)
+    this.filters.push({'q': this.keyword})
+    // console.log(this.filters)
     this.$store.dispatch('getNews',this.filters);
+    
   },
   computed: {
    news(){
         return this.$store.getters.articles
-         
       },
+      searchedNews(){
+        return this.$store.getters.searchResults
+      }
   }
 
 }
