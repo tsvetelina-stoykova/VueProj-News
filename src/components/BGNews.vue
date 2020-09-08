@@ -25,11 +25,27 @@
     </article>
   </div>
 
+  <div class="card-footer pb-0 pt-3">
+      <jw-pagination :items="articles" @changePage="onChangePage"></jw-pagination>
+  </div>
+  <!-- <div class="card ">
+        <div class="card-body">
+            <div v-for="item in pageOfItems" :key="item.id">{{item.name}}</div>
+            
+        </div>
+        <div class="card-footer pb-0 pt-3">
+            <jw-pagination :item="pageOfItems" @changePage="onChangePage"></jw-pagination>
+        </div>
+    </div> -->
+
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+// const exampleItems = [...Array(150).keys()].map(i => ({ id: (i+1), name: 'Item ' + (i+1) }));
+// console.log(exampleItems)
+
 export default {
   data: () => {
     return {
@@ -40,7 +56,9 @@ export default {
       keyword: '',
       articles: [],
       filters:[],
-      country: 'bg'
+      country: 'bg',
+      // exampleItems,
+      pageOfItems: [],
     }
   },
 
@@ -50,6 +68,16 @@ export default {
     },
     search(){
       this.$store.dispatch('searchNews',this.keyword);  
+    },
+    // onChangePage(pageOfItems) {
+    //         // update page of items
+    //         this.pageOfItems = pageOfItems;
+    //         console.log(pageOfItems);
+    // }
+    onChangePage(pageOfItems) {
+            // update page of items
+            this.pageOfItems = pageOfItems;
+            console.log(pageOfItems);
     }
   },
  
@@ -66,6 +94,7 @@ export default {
     // console.log(this.filters)
     this.$store.dispatch('getNews',this.filters);
     
+    
   },
   computed: {
    news(){
@@ -73,6 +102,7 @@ export default {
       },
       searchedNews(){
         return this.$store.getters.searchResults
+       
       }
   }
 

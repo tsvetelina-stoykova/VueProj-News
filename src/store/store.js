@@ -12,18 +12,20 @@ export const store = new Vuex.Store({
     getters: {
         articles(state){
             return state.articles
+          
         }, 
         searchResults(state){
             return state.searchResults
+            
         }
     },
     mutations: {
         updateNews(state, data) {
             state.articles = data;
             },
-            searchResultNews(state, data){
-                state.articles = data;
-            }
+        searchResultNews(state, data){
+            state.articles = data;
+        }
     },
     actions: {
         async getNews(context,data) {
@@ -32,7 +34,7 @@ export const store = new Vuex.Store({
             data.forEach(element => {
                 var countryName = Object.keys(element);
                 var countryValue =  Object.values(element)
-                console.log(countryValue);
+                // console.log(countryValue);
                 baseUrl+=`&${countryName}=${countryValue}`
             });
             const response = await axios.get(baseUrl)
@@ -41,7 +43,7 @@ export const store = new Vuex.Store({
             //  alert(baseUrl)
         },
         async searchNews(context, keyword) {
-            console.log(`Searching word: ${keyword}`);
+            // console.log(`Searching word: ${keyword}`);
             var newsUrl = 'http://newsapi.org/v2/everything?apiKey=7071bce3ae434ff3837aa5de4c358584';
             if(keyword){
                 newsUrl+=`&q=${keyword}`
