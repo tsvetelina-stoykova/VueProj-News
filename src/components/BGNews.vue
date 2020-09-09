@@ -1,5 +1,6 @@
 <template>
   <div class="news">
+      {{articles}}
     <b-container class="container-news">
       <b-nav-form class="searchbar">
           <b-form-input v-model="keyword" id="name" size="md" class="mr-sm-2 searchbar-input" placeholder="Search"></b-form-input>
@@ -26,8 +27,10 @@
   </div>
 
   <div class="card-footer pb-0 pt-3">
+  
       <jw-pagination :items="articles" @changePage="onChangePage"></jw-pagination>
   </div>
+
   <!-- <div class="card ">
         <div class="card-body">
             <div v-for="item in pageOfItems" :key="item.id">{{item.name}}</div>
@@ -43,8 +46,8 @@
 
 <script>
 import axios from 'axios'
-// const exampleItems = [...Array(150).keys()].map(i => ({ id: (i+1), name: 'Item ' + (i+1) }));
-// console.log(exampleItems)
+const exampleItems = [...Array(150).keys()].map(i => ({ id: (i+1), name: 'Item ' + (i+1) }));
+console.log(exampleItems)
 
 export default {
   data: () => {
@@ -57,7 +60,7 @@ export default {
       articles: [],
       filters:[],
       country: 'bg',
-      // exampleItems,
+      exampleItems,
       pageOfItems: [],
     }
   },
@@ -76,6 +79,7 @@ export default {
     // }
     onChangePage(pageOfItems) {
             // update page of items
+            alert(pageOfItems)
             this.pageOfItems = pageOfItems;
             console.log(pageOfItems);
     }
