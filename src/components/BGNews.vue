@@ -1,6 +1,8 @@
 <template>
   <div class="news">
-      {{articles}}
+      {{news[0]}} <br>
+      {{news[1]}} <br>
+      {{news[2]}} <br>
     <b-container class="container-news">
       <b-nav-form class="searchbar">
           <b-form-input v-model="keyword" id="name" size="md" class="mr-sm-2 searchbar-input" placeholder="Search"></b-form-input>
@@ -17,37 +19,37 @@
     </article>
   </div>
 
-  <div>
+  <!-- <div>
      <article v-for="(article, index) in searchedNews" :key='index' @click="navTo(article.url)">
       <header>
         <img v-if="article.urlToImage" :src="article.urlToImage" alt="">
       </header>
       <section v-html="article.title" class="article-title"></section>
     </article>
-  </div>
-
-  <div class="card-footer pb-0 pt-3">
+  </div> -->
   
-      <jw-pagination :items="articles" @changePage="onChangePage"></jw-pagination>
-  </div>
-
-  <!-- <div class="card ">
-        <div class="card-body">
-            <div v-for="item in pageOfItems" :key="item.id">{{item.name}}</div>
-            
-        </div>
-        <div class="card-footer pb-0 pt-3">
-            <jw-pagination :item="pageOfItems" @changePage="onChangePage"></jw-pagination>
-        </div>
-    </div> -->
-
+  <news-paginated
+					:data="news"
+					
+					
+					:per-page="4"
+					:current-page="currentPage"
+					@pagechanged="onPageChange"
+				/>
+         <!-- :total-pages="Math.ceil(searchResults.length / 4)" -->
+         <!-- :total="searchResults.length" -->
   </div>
 </template>
 
+
+
+
 <script>
 import axios from 'axios'
-const exampleItems = [...Array(150).keys()].map(i => ({ id: (i+1), name: 'Item ' + (i+1) }));
-console.log(exampleItems)
+import NewsPaginated from './NewsPaginated.vue'
+import { mapGetters, mapActions } from 'vuex'
+
+
 
 export default {
   data: () => {
@@ -57,15 +59,25 @@ export default {
       totalResults: 0,
       maxPerPage: 10,
       keyword: '',
-      articles: [],
+      // articles: [],
       filters:[],
       country: 'bg',
-      exampleItems,
-      pageOfItems: [],
+      currentPage: 1,
+     
     }
+  },
+  components: {
+    NewsPaginated
+  },
+  mounted(){
   },
 
   methods: {
+    onPageChange(page) {
+      this.currentPage = page;
+    },
+    getAllNews() {
+   },
     navTo(url){
       window.open(url)
     },
@@ -77,12 +89,7 @@ export default {
     //         this.pageOfItems = pageOfItems;
     //         console.log(pageOfItems);
     // }
-    onChangePage(pageOfItems) {
-            // update page of items
-            alert(pageOfItems)
-            this.pageOfItems = pageOfItems;
-            console.log(pageOfItems);
-    }
+   
   },
  
 
@@ -95,19 +102,19 @@ export default {
     this.filters.push( {'country' : this.country} ) 
     this.filters.push({'pageSize': this.maxPerPage})
     this.filters.push({'q': this.keyword})
-    // console.log(this.filters)
     this.$store.dispatch('getNews',this.filters);
+
     
     
   },
   computed: {
-   news(){
-        return this.$store.getters.articles
-      },
-      searchedNews(){
-        return this.$store.getters.searchResults
-       
-      }
+    ...mapGetters(['searchResults']),
+    news(){
+          return this.$store.getters.articles;
+        },
+    searchedNews(){
+      return this.$store.getters.searchResults
+    }
   }
 
 }
@@ -160,4 +167,34 @@ img {
   padding: 10px;
   height: 100px;
 }
+
+.pagination {
+      display: flex;
+      justify-content: center;
+      padding: 0;
+      margin: auto 0 0 0;
+      list-style-type: none;
+}      
+.pagination-item button {
+    margin: 0!important;
+    padding: .25rem .5rem;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: .25rem;
+    background: none;
+    
+}
+
+
+/* &:hover
+      cursor: pointer;
+      background-color: silver;
+    &[disabled="disabled"]
+      color: silver;
+      cursor: default;
+      &:hover
+        cursor: default
+        background-color: transparent
+    &.active
+      color: red */
 </style>

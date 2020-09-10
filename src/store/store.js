@@ -8,6 +8,7 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
     state: {
         articles: [],
+        searchResults:[]
     },
     getters: {
         articles(state){
