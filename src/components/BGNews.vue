@@ -75,6 +75,7 @@ export default {
   methods: {
     onPageChange(page) {
       this.currentPage = page;
+      //axios get url ? this.currentPage&offset=20&perPage=10
     },
     getAllNews() {
    },
